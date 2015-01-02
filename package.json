@@ -21,7 +21,7 @@
     "url": "https://github.com/shannonmoeller/grunt-hb.git"
   },
   "scripts": {
-    "coveralls": "grunt cover && cat ./coverage/lcov.info | coveralls",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
     "test": "grunt test"
   },
   "dependencies": {

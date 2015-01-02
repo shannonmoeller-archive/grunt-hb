@@ -13,8 +13,6 @@ module.exports = function (grunt) {
 			files = this.files,
 			count = files.length;
 
-		console.log(count);
-
 		/* istanbul ignore next */
 		function fail(err) {
 			grunt.log.error(err);
