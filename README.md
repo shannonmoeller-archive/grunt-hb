@@ -30,19 +30,20 @@ Task targets, files and options may be specified according to the grunt [Configu
 
 ```js
 grunt.initConfig({
-hb: {
-	all: {
-		options: {
-			data: 'src/meta.json',
-			helpers: 'src/view/helpers/*.js',
-			partials: 'src/view/partials/*.hb',
-		},
+    hb: {
+        all: {
+            options: {
+                data: 'src/meta.json',
+                helpers: 'src/view/helpers/*.js',
+                partials: 'src/view/partials/*.hb',
+            },
 
-		files: {
-			'out/index.html': 'src/index.hbs'
-		}
-	}
-}
+            files: {
+                'out/index.html': 'src/index.hbs'
+            }
+        }
+    }
+});
 ```
 
 ## Options
