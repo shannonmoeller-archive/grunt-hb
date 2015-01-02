@@ -22,7 +22,7 @@
   },
   "scripts": {
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "test": "grunt test"
+    "test": "grunt"
   },
   "dependencies": {
     "gulp-front-matter": "^1.1.1",
