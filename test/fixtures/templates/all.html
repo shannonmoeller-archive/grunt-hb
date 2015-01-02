@@ -1,0 +1,19 @@
+---
+foo: Bar
+---
+<!doctype html>
+<html>
+<head>
+	<title>All</title>
+</head>
+<body>
+	{{foo.title}}
+	{{bar.title}}
+	{{upper file.frontMatter.foo}}
+	{{flow-when "a" "b"}}
+	<ul>
+		{{> components/item label="hello"}}
+		{{> components/item label="world"}}
+	</ul>
+</body>
+</html>
