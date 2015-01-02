@@ -6,34 +6,18 @@ A sane static Handlebars Grunt plugin. Think [Assemble](http://assemble.io/), bu
 
 For Gulp, see [gulp-hb](https://github.com/shannonmoeller/gulp-hb).
 
-## Getting Started
+## Install
 
-This plugin requires Grunt `~0.4.0`
-
-If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
-
-```shell
-$ npm install --save-dev grunt-hb
-```
-
-Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
-
-```js
-grunt.loadNpmTasks('grunt-hb');
-```
-
-## The `hb` Task
-
-_Run this task with the `grunt hb` command._
-
-Task targets, files and options may be specified according to the grunt [Configuring tasks](http://gruntjs.com/configuring-tasks) guide.
+    $ npm install --save-dev grunt-hb
 
 ### Example
 
 ```js
+require('jit-grunt')(grunt); // npm install --save-dev jit-grunt
+
 grunt.initConfig({
     hb: {
-        all: {
+        target: {
             options: {
                 data: 'src/meta.json',
                 helpers: 'src/view/helpers/*.js',
@@ -46,15 +30,19 @@ grunt.initConfig({
         }
     }
 });
+
+grunt.registerTask('default', ['hb']);
 ```
 
 ## Options
 
-### `data` _`String|Array.<String>`_
+Internally, this plugin uses [gulp-hb](https://github.com/shannonmoeller/gulp-hb) and [gulp-front-matter](https://github.com/lmtm/gulp-front-matter) to process files. The options object will be passed directly to both plugins, so any of their options may be specified. Here are some of the common ones:
+
+### `data` `{String|Array.<String>}`
 
 Glob string or array of glob strings matching data files. You can't use object literals here. Because, don't.
 
-### `file` _`Boolean`_ (default: true)
+### `file` `{Boolean}` (default: true)
 
 Whether to include the file object in the data passed to the template. This provides access to optional file-specific data, including front matter.
 
@@ -65,7 +53,7 @@ title: Hello World
 <h1>{{file.frontMatter.title}}</h1>
 ```
 
-### `helpers` _`String|Array.<String>`_
+### `helpers` `{String|Array.<String>}`
 
 Glob string or array of glob strings matching helper files. Helper files are JavaScript files that define one or more helpers.
 
@@ -104,7 +92,7 @@ module.exports.register = function (Handlebars) {
 };
 ```
 
-### `partials` _`String|Array.<String>`_
+### `partials` `{String|Array.<String>}`
 
 Glob string or array of glob strings matching partial files. Partial files are either standalone Handlebars files, or JavaScript files that define one or more partials.
 
