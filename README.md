@@ -20,7 +20,7 @@ Once the plugin has been installed, it may be enabled inside your Gruntfile with
 grunt.loadNpmTasks('grunt-hb');
 ```
 
-## `hb` task
+## The `hb` Task
 
 _Run this task with the `grunt hb` command._
 
