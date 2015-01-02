@@ -1,5 +1,7 @@
 # `grunt-hb`
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/shannonmoeller/grunt-hb?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![NPM version][npm-img]][npm-url] [![Downloads][downloads-img]][npm-url] [![Build Status][travis-img]][travis-url] [![Coverage Status][coveralls-img]][coveralls-url]
 
 A sane static Handlebars Grunt plugin. Think [Assemble](http://assemble.io/), but with a lot less [Jekyll](http://jekyllrb.com/) baggage.
