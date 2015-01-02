@@ -53,7 +53,7 @@ Glob string or array of glob strings matching data files. You can't use object l
 
 ### `file` _`Boolean`_ (default: true)
 
-Whether to include the file object in the data passed to the template. This provides access to optional file-specific front matter data.
+Whether to include the file object in the data passed to the template. This provides access to optional file-specific data, including front matter.
 
 ```html
 ---
