@@ -4,6 +4,8 @@
 
 A sane static Handlebars Grunt plugin. Think [Assemble](http://assemble.io/), but with a lot less [Jekyll](http://jekyllrb.com/) baggage.
 
+For Gulp, see [gulp-hb](https://github.com/shannonmoeller/gulp-hb).
+
 ## Getting Started
 
 This plugin requires Grunt `~0.4.0`
