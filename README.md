@@ -42,7 +42,7 @@ Internally, this plugin uses [gulp-hb](https://github.com/shannonmoeller/gulp-hb
 
 Glob string or array of glob strings matching data files. You can't use object literals here. Because, don't.
 
-### `file` `{Boolean}` (default: true)
+### `file` `{Boolean}` (default: `true`)
 
 Whether to include the file object in the data passed to the template. This provides access to optional file-specific data, including front matter.
 
