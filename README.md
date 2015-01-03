@@ -10,7 +10,7 @@ For Gulp, see [gulp-hb](https://github.com/shannonmoeller/gulp-hb).
 
     $ npm install --save-dev grunt-hb
 
-### Example
+## Example
 
 ```js
 require('jit-grunt')(grunt); // npm install --save-dev jit-grunt
