@@ -36,7 +36,11 @@ grunt.registerTask('default', ['hb']);
 
 ## Options
 
-Internally, this plugin uses [gulp-hb](https://github.com/shannonmoeller/gulp-hb) and [gulp-front-matter](https://github.com/lmtm/gulp-front-matter) to process files. The options object will be passed directly to both plugins, so any of their options may be specified. Here are some of the common ones:
+Internally, this plugin uses [gulp-hb](https://github.com/shannonmoeller/gulp-hb) and [gulp-front-matter](https://github.com/lmtm/gulp-front-matter) to process files. The options object will be passed directly to both plugins, so any of that module's options may be specified. Here are some of the common ones:
+
+### `cwd` `{String}`
+
+Current working directory. Defaults to `process.cwd()`.
 
 ### `data` `{String|Array.<String>}`
 
