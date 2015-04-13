@@ -19,9 +19,15 @@ grunt.initConfig({
     hb: {
         target: {
             options: {
-                data: 'src/meta.json',
-                helpers: 'src/view/helpers/*.js',
-                partials: 'src/view/partials/*.hb',
+                data: './src/assets/data/**/*.{js,json}',
+                helpers: [
+                    './node_modules/handlebars-layouts/index.js',
+                    './node_modules/handlebars-helpers/lib/helpers/helpers-{dates,math}.js'
+                    './src/assets/helpers/*.js'
+                ],
+                partials: [
+                    './src/assets/partials/**/*.hbs'
+                ]
             },
 
             files: {
@@ -42,9 +48,9 @@ Internally, this plugin uses [gulp-hb](https://github.com/shannonmoeller/gulp-hb
 
 Current working directory. Defaults to `process.cwd()`.
 
-### `data` `{String|Array.<String>}`
+### `data` `{String|Array.<String>|Object|Function}`
 
-Glob string or array of glob strings matching data files. You can't use object literals here. Because, don't.
+An object literal, a glob string matching data files, an array of glob strings, or a function returning any of these. Globbed data files are merged into an object structure which mirrors the directory structure and file names.
 
 ### `file` `{Boolean}` (default: `true`)
 
@@ -57,9 +63,9 @@ title: Hello World
 <h1>{{file.frontMatter.title}}</h1>
 ```
 
-### `helpers` `{String|Array.<String>}`
+### `helpers` `{String|Array.<String>|Object|Function}`
 
-Glob string or array of glob strings matching helper files. Helper files are JavaScript files that define one or more helpers.
+An [object of helpers](http://handlebarsjs.com/reference.html#base-registerHelper), a glob string matching helper files, an array of glob strings, or a function returning any of these. Globbed helper files are JavaScript files that define one or more helpers.
 
 As a single helper function (helper will be named according to the filename):
 
@@ -98,9 +104,9 @@ module.exports.register = function (Handlebars) {
 };
 ```
 
-### `partials` `{String|Array.<String>}`
+### `partials` `{String|Array.<String>|Object|Function}`
 
-Glob string or array of glob strings matching partial files. Partial files are either standalone Handlebars files, or JavaScript files that define one or more partials.
+An [object of partials](http://handlebarsjs.com/reference.html#base-registerPartial), a glob string matching partial files, an array of glob strings, or a function returning any of these. Globbed partial files are either standalone Handlebars files, or JavaScript files that define one or more helpers.
 
 As a standalone Handlebars file:
 
