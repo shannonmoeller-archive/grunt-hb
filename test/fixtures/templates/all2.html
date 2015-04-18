@@ -1,6 +1,3 @@
----
-foo: Bar
----
 <!doctype html>
 <html>
 <head>
@@ -9,7 +6,7 @@ foo: Bar
 <body>
 	{{foo.title}}
 	{{bar.title}}
-	{{upper file.frontMatter.foo}}
+	{{upper "Hello World"}}
 	{{flow-when "a" "b"}}
 	<ul>
 		{{> components/item label="hello"}}

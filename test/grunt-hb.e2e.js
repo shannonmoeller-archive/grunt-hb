@@ -1,9 +1,9 @@
 'use strict';
 
-var expect = require('expect.js'),
-	map = require('map-stream'),
+var expect = require('expect'),
 	fs = require('fs'),
-	vs = require('vinyl-fs'),
+	map = require('map-stream'),
+	vinylFs = require('vinyl-fs'),
 
 	config = {
 		actual: __dirname + '/actual/**/*.html'
@@ -16,7 +16,7 @@ describe('hb e2e', function () {
 		count++;
 
 		var expected = file.path.replace('actual', 'expected');
-		expect(file.contents.toString()).to.be(fs.readFileSync(expected, 'utf8'));
+		expect(String(file.contents)).toBe(String(fs.readFileSync(expected)));
 		cb(null, file);
 	}
 
@@ -25,12 +25,12 @@ describe('hb e2e', function () {
 	});
 
 	it('should render handlebars files', function (done) {
-		vs
+		vinylFs
 			.src(config.actual)
 			.pipe(map(toEqualExpected))
 			.on('error', done)
 			.on('end', function () {
-				expect(count).to.be(6);
+				expect(count).toBe(9);
 				done();
 			});
 	});

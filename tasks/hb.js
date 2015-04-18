@@ -1,10 +1,10 @@
 'use strict';
 
-var handlebars = require('gulp-hb'),
-	matter = require('gulp-front-matter'),
+var frontMatter = require('gulp-front-matter'),
+	hb = require('gulp-hb'),
 	path = require('path'),
 	rename = require('gulp-rename'),
-	vinyl = require('vinyl-fs');
+	vinylFs = require('vinyl-fs');
 
 module.exports = function (grunt) {
 	grunt.registerMultiTask('hb', 'Renders Handlebars templates to static HTML.', function () {
@@ -22,8 +22,6 @@ module.exports = function (grunt) {
 		}
 
 		function success() {
-			grunt.log.ok();
-
 			// Are we done yet?
 			if ((--count) === 0) {
 				done(true);
@@ -35,16 +33,14 @@ module.exports = function (grunt) {
 				dirname = path.dirname(dest),
 				basename = path.basename(dest);
 
-			grunt.log.write('Creating "%s"...', dest);
-
-			vinyl                          // Oh yes I did
-				.src(file.src)             // Read file
-				.pipe(matter(options))     // Parse frontmatter
-				.pipe(handlebars(options)) // Render handlebars
-				.pipe(rename(basename))    // Set new filename
-				.pipe(vinyl.dest(dirname)) // Write file
-				.on('error', fail)         // Handle errors
-				.on('end', success);       // Mark completed
+			vinylFs                          // Oh yes I did
+				.src(file.src)               // Read file
+				.pipe(frontMatter(options))  // Parse frontmatter
+				.pipe(hb(options))           // Render handlebars
+				.pipe(rename(basename))      // Set new filename
+				.pipe(vinylFs.dest(dirname)) // Write file
+				.on('error', fail)           // Handle errors
+				.on('end', success);         // Mark completed
 		}
 
 		if (count) {
