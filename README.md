@@ -20,19 +20,15 @@ grunt.initConfig({
         target: {
             options: {
                 data: './src/assets/data/**/*.{js,json}',
-                helpers: [
-                    './node_modules/handlebars-layouts/index.js',
-                    './node_modules/handlebars-helpers/lib/helpers/helpers-{dates,math}.js'
-                    './src/assets/helpers/*.js'
-                ],
-                partials: [
-                    './src/assets/partials/**/*.hbs'
-                ]
+                helpers: './src/assets/helpers/*.js',
+                partials: './src/assets/partials/**/*.hbs'
             },
-
-            files: {
-                'out/index.html': 'src/index.hbs'
-            }
+            files: [{
+                expand: true,
+                cwd: './src/',
+                src: ['{,posts/}*.html'],
+                dest: './web/'
+            }]
         }
     }
 });
@@ -42,15 +38,44 @@ grunt.registerTask('default', ['hb']);
 
 ## Options
 
-Internally, this plugin uses [gulp-hb](https://github.com/shannonmoeller/gulp-hb) and [gulp-front-matter](https://github.com/lmtm/gulp-front-matter) to process files. The options object will be passed directly to both plugins, so any of that module's options may be specified. Here are some of the common ones:
-
-### `cwd` `{String}`
-
-Current working directory. Defaults to `process.cwd()`.
+Internally, this plugin uses [gulp-hb](https://github.com/shannonmoeller/gulp-hb) and [gulp-front-matter](https://github.com/lmtm/gulp-front-matter) to process files. The options object will be passed directly to both plugins, so any of those modules' options may be specified. Here are some of the common ones:
 
 ### `data` `{String|Array.<String>|Object|Function}`
 
-An object literal, a glob string matching data files, an array of glob strings, or a function returning any of these. Globbed data files are merged into an object structure which mirrors the directory structure and file names.
+A glob string matching data files, an array of glob strings, an object literal, or a function returning any of these. Globbed data files are merged into an object structure which mirrors the directory structure and file names.
+
+```js
+data: './src/assets/data/**/*.{js,json}'
+```
+
+```js
+data: [
+    './package.json',
+    './src/assets/data/**/*.{js,json}'
+]
+```
+
+```js
+data: {
+    pkg: require('./package.json'),
+    foo: 'bar'
+}
+```
+
+### `dataEach` `{Function(Object,Vinyl):Object}`
+
+A pre-render hook to modify the context object being passed to the handlebars template on a per-file basis.
+
+```js
+dataEach: function (context, file) {
+    context.foo = bar;
+    return context;
+}
+```
+
+### `debug` `{Boolean}` (default: `false`)
+
+Whether to log the helper names, partial names, and root property names for each file as they are rendered.
 
 ### `file` `{Boolean}` (default: `true`)
 
@@ -63,11 +88,34 @@ title: Hello World
 <h1>{{file.frontMatter.title}}</h1>
 ```
 
-### `helpers` `{String|Array.<String>|Object|Function}`
+### `helpers` `{Object|String|Array.<String>|Function}`
 
-An [object of helpers](http://handlebarsjs.com/reference.html#base-registerHelper), a glob string matching helper files, an array of glob strings, or a function returning any of these. Globbed helper files are JavaScript files that define one or more helpers.
+A glob string matching helper files, an array of glob strings, an [object of helpers](http://handlebarsjs.com/reference.html#base-registerHelper), or a function returning any of these. Globbed helper files are JavaScript files that define one or more helpers.
 
-As a single helper function (helper will be named according to the filename):
+```js
+helpers: './src/assets/helpers/**/*.js'
+```
+
+```js
+helpers: [
+    './node_modules/handlebars-layouts/index.js',
+    './src/assets/helpers/**/*.js'
+]
+```
+
+```js
+helpers: {
+    lower: function (text) {
+        return String(text).toLowerCase();
+    },
+
+    upper: function (text) {
+        return String(text).toUpperCase();
+    }
+}
+```
+
+When including helpers using globs, modules may export a single helper function. Each helper will be named according to the file path and name without the extension. So a helper with a path of `string/upper.js` will be named `string-upper`. Note that path separators are replaced with hyphens to avoid having to use [square brackets](http://handlebarsjs.com/expressions.html#basic-blocks).
 
 ```js
 // lower.js
@@ -76,9 +124,7 @@ module.exports = function (text) {
 };
 ```
 
-When registering an unnamed helper, the helper will be named according to the file path and name without the extension. So a helper with a path of `string/upper.js` will be named `string-upper`. Note that path separators are replaced with hyphens to avoid having to use [square brackets](http://handlebarsjs.com/expressions.html#basic-blocks).
-
-As an object of helper functions:
+Helpers may also export an object of named functions.
 
 ```js
 // helpers.js
@@ -93,47 +139,42 @@ module.exports = {
 };
 ```
 
-As an Assemble registrar:
+### `partials` `{Object|String|Array.<String>|Function}`
+
+A glob string matching partial files, an array of glob strings, an [object of partials](http://handlebarsjs.com/reference.html#base-registerPartial), or a function returning any of these. Globbed partial files are either standalone Handlebars files, or JavaScript files that define one or more helpers.
 
 ```js
-// assemble.js
-module.exports.register = function (Handlebars) {
-    Handlebars.registerHelper('lower', function (text) {
-        return String(text).toLowerCase();
-    });
-};
+partials: './src/assets/partials/**/*.{hbs,js}'
 ```
 
-### `partials` `{String|Array.<String>|Object|Function}`
+```js
+partials: [
+    './src/assets/vendor/some-theme/partials/**/*.hbs',
+    './src/assets/partials/**/*.hbs'
+]
+```
 
-An [object of partials](http://handlebarsjs.com/reference.html#base-registerPartial), a glob string matching partial files, an array of glob strings, or a function returning any of these. Globbed partial files are either standalone Handlebars files, or JavaScript files that define one or more helpers.
+```js
+partials: {
+    link: '<a href="{{url}}">{{text}}</a>',
+    people: '<ul>{{#people}}<li>{{> link}}</li>{{/people}}</ul>'
+}
+```
 
-As a standalone Handlebars file:
+When including paritals using globs, partials may be standalone handlebars files. Each partial will be named according to the file path and name without the extension. So a partial with a path of `component/link.hbs` will be named `component/link`.
 
 ```handlebars
 {{!-- link.hbs --}}
 <a href="{{url}}">{{text}}</a>
 ```
 
-When registering an unnamed partial, the partial will be named according to the file path and name without the extension. So a partial with a path of `component/link.hbs` will be named `component/link`.
-
-As an object of partials:
+Partials may also be modules that export an object of named partials.
 
 ```js
 // partials.js
 module.exports = {
     link: '<a href="{{url}}">{{text}}</a>',
     people: '<ul>{{#people}}<li>{{> link}}</li>{{/people}}</ul>'
-};
-```
-
-As an Assemble registrar:
-
-```js
-// assemble.js
-module.exports.register = function (Handlebars) {
-    Handlebars.registerPartial('link', '<a href="{{url}}">{{text}}</a>');
-    Handlebars.registerPartial('people', '<ul>{{#people}}<li>{{> link}}</li>{{/people}}</ul>');
 };
 ```
 

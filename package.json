@@ -1,6 +1,6 @@
 {
   "name": "grunt-hb",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "A sane Handlebars Grunt task.",
   "keywords": [
     "grunt",
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "gulp-front-matter": "^1.2.2",
-    "gulp-hb": "^2.4.0",
+    "gulp-hb": "^2.4.1",
     "gulp-rename": "^1.2.2",
     "handlebars": "^3.0.1",
     "vinyl-fs": "^1.0.0"
