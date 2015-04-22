@@ -88,7 +88,7 @@ title: Hello World
 <h1>{{file.frontMatter.title}}</h1>
 ```
 
-### `helpers` `{Object|String|Array.<String>|Function}`
+### `helpers` `{String|Array.<String>|Object|Function}`
 
 A glob string matching helper files, an array of glob strings, an [object of helpers](http://handlebarsjs.com/reference.html#base-registerHelper), or a function returning any of these. Globbed helper files are JavaScript files that define one or more helpers.
 
@@ -155,7 +155,7 @@ module.exports.regsiter = function (handlebars) {
 };
 ```
 
-### `partials` `{Object|String|Array.<String>|Function}`
+### `partials` `{String|Array.<String>|Object|Function}`
 
 A glob string matching partial files, an array of glob strings, an [object of partials](http://handlebarsjs.com/reference.html#base-registerPartial), or a function returning any of these. Globbed partial files are either standalone Handlebars files, or JavaScript files that define one or more helpers.
 
