@@ -147,9 +147,9 @@ module.exports.regsiter = function (handlebars) {
     handlebars.registerHelper('link', function(text, url) {
         text = handlebars.Utils.escapeExpression(text);
         url  = handlebars.Utils.escapeExpression(url);
-        
+
         var result = '<a href="' + url + '">' + text + '</a>';
-        
+
         return new handlebars.SafeString(result);
     });
 };
@@ -226,7 +226,7 @@ Licensed under [MIT](http://shannonmoeller.com/mit.txt)
 [coveralls-url]: https://coveralls.io/r/shannonmoeller/grunt-hb
 [downloads-img]: http://img.shields.io/npm/dm/grunt-hb.svg?style=flat-square
 [gitter-img]:    http://img.shields.io/badge/gitter-join_chat-1dce73.svg?style=flat-square
-[gitter-url]:    https://gitter.im/shannonmoeller/grunt-hb
+[gitter-url]:    https://gitter.im/shannonmoeller/shannonmoeller
 [gittip-img]:    http://img.shields.io/gittip/shannonmoeller.svg?style=flat-square
 [gittip-url]:    https://www.gittip.com/shannonmoeller
 [npm-img]:       http://img.shields.io/npm/v/grunt-hb.svg?style=flat-square
