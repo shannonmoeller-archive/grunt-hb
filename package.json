@@ -26,9 +26,9 @@
   },
   "dependencies": {
     "gulp-front-matter": "^1.2.2",
-    "gulp-hb": "^2.4.1",
+    "gulp-hb": "^2.5.0",
     "gulp-rename": "^1.2.2",
-    "handlebars": "^3.0.1",
+    "handlebars": "^3.0.3",
     "vinyl-fs": "^1.0.0"
   },
   "devDependencies": {
@@ -37,14 +37,14 @@
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^0.6.0",
     "gulp": "^3.8.11",
-    "gulp-istanbul": "^0.8.1",
-    "gulp-jscs": "^1.5.2",
+    "gulp-istanbul": "^0.9.0",
+    "gulp-jscs": "^1.6.0",
     "gulp-jshint": "^1.10.0",
     "gulp-mocha": "^2.0.1",
     "jit-grunt": "^0.9.1",
-    "jshint-stylish": "^1.0.1",
+    "jshint-stylish": "^1.0.2",
     "map-stream": "0.0.5",
-    "time-grunt": "^1.1.1"
+    "time-grunt": "^1.2.0"
   },
   "engines": {
     "node": ">= 0.10"

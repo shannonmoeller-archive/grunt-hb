@@ -40,6 +40,18 @@ grunt.registerTask('default', ['hb']);
 
 Internally, this plugin uses [gulp-hb](https://github.com/shannonmoeller/gulp-hb) and [gulp-front-matter](https://github.com/lmtm/gulp-front-matter) to process files. The options object will be passed directly to both plugins, so any of those modules' options may be specified. Here are some of the common ones:
 
+- [`data` `{String|Array.<String>|Object|Function}`](#data-string%7Carraystring%7Cobject%7Cfunction)
+- [`parseDataName` `{Function(Object):String}`](#parsedataname-functionobjectstring)
+- [`helpers` `{String|Array.<String>|Object|Function}`](#helpers-string%7Carraystring%7Cobject%7Cfunction)
+- [`parseHelperName` `{Function(Object):String}`](#parsehelpername-functionobjectstring)
+- [`partials` `{String|Array.<String>|Object|Function}`](#partials-string%7Carraystring%7Cobject%7Cfunction)
+- [`parsePartialName` `{Function(Object):String}`](#parsepartialname-functionobjectstring)
+- [`bustCache` `{Boolean}` (default: `false`)](#bustcache-boolean-default-false)
+- [`cwd` `{String}`](#cwd-string)
+- [`dataEach` `{Function(Object,Vinyl):Object}`](#dataeach-functionobjectvinylobject)
+- [`debug` `{Boolean}` (default: `false`)](#debug-boolean-default-false)
+- [`file` `{Boolean}` (default: `true`)](#file-boolean-default-true)
+
 ### `data` `{String|Array.<String>|Object|Function}`
 
 A glob string matching data files, an array of glob strings, an object literal, or a function returning any of these. Globbed data files are merged into an object structure which mirrors the directory structure and file names.
@@ -62,30 +74,33 @@ data: {
 }
 ```
 
-### `dataEach` `{Function(Object,Vinyl):Object}`
+### `parseDataName` `{Function(Object):String}`
 
-A pre-render hook to modify the context object being passed to the handlebars template on a per-file basis.
+By default, globbed data files are merged into a object structure according to the shortest unique file path without the extension, where path separators determine object nesting. So if you have two data files with the paths `site/meta.js` and `posts/nav.js`, the data object will be equivelent to the following:
 
 ```js
-dataEach: function (context, file) {
-    context.foo = bar;
-    return context;
+{
+    site: {
+        meta: require('site/meta.js')
+    },
+    posts: {
+        nav: require('posts/nav.js')
+    }
 }
 ```
 
-### `debug` `{Boolean}` (default: `false`)
+You may optionally provide your own name parser. This is helpful in cases where you may wish to exclude the directory names.
 
-Whether to log the helper names, partial names, and root property names for each file as they are rendered.
+```js
+parseDataName: function (file) {
+    // this.handlebars <- current handlebars instance
+    // file.path       <- full system path with extension
+    // file.shortPath  <- shortest unique path without extension
+    // file.exports    <- result of requiring the helper
 
-### `file` `{Boolean}` (default: `true`)
-
-Whether to include the file object in the data passed to the template. This provides access to optional file-specific data, including front matter.
-
-```html
----
-title: Hello World
----
-<h1>{{file.frontMatter.title}}</h1>
+    // Ignore directory names
+    return path.basename(file.path);
+}
 ```
 
 ### `helpers` `{String|Array.<String>|Object|Function}`
@@ -115,7 +130,7 @@ helpers: {
 }
 ```
 
-When including helpers using globs, modules may export a single helper function. Each helper will be named according to the file path and name without the extension. So a helper with a path of `string/upper.js` will be named `string-upper`. Note that path separators are replaced with hyphens to avoid having to use [square brackets](http://handlebarsjs.com/expressions.html#basic-blocks).
+When including helpers using globs, modules may export a single helper function. These helpers will be named by calling `parseHelperName`.
 
 ```js
 // lower.js
@@ -143,7 +158,7 @@ If you need a reference to the handlebars instance inside of a helper, you may e
 
 ```js
 // helpers.js
-module.exports.regsiter = function (handlebars) {
+module.exports.register = function (handlebars) {
     handlebars.registerHelper('link', function(text, url) {
         text = handlebars.Utils.escapeExpression(text);
         url  = handlebars.Utils.escapeExpression(url);
@@ -153,6 +168,22 @@ module.exports.regsiter = function (handlebars) {
         return new handlebars.SafeString(result);
     });
 };
+```
+
+### `parseHelperName` `{Function(Object):String}`
+
+By default, standalone helpers will be named according to the shortest unique file path without the extension. So a helper with a path of `string/upper.js` will be named `string-upper`. Note that path separators are replaced with hyphens to avoid having to use [square brackets](http://handlebarsjs.com/expressions.html#basic-blocks). You may optionally provide your own name parser. This is helpful in cases where you may wish to exclude the directory names.
+
+```js
+parseHelperName: function (file) {
+    // this.handlebars <- current handlebars instance
+    // file.path       <- full system path with extension
+    // file.shortPath  <- shortest unique path without extension
+    // file.exports    <- result of requiring the helper
+
+    // Ignore directory names
+    return path.basename(file.path);
+}
 ```
 
 ### `partials` `{String|Array.<String>|Object|Function}`
@@ -177,7 +208,7 @@ partials: {
 }
 ```
 
-When including paritals using globs, partials may be standalone handlebars files. Each partial will be named according to the file path and name without the extension. So a partial with a path of `component/link.hbs` will be named `component/link`.
+When including paritals using globs, partials may be standalone handlebars files. Each partial will be named by calling `parsePartialName`.
 
 ```handlebars
 {{!-- link.hbs --}}
@@ -198,12 +229,63 @@ If you need a reference to the handlebars instance when defining a partial, you 
 
 ```js
 // partials.js
-module.exports.regsiter = function (handlebars) {
+module.exports.register = function (handlebars) {
     handlebars.registerPartial({
         item: '<li>{{label}}</li>',
         link: '<a href="{{url}}">{{label}}</a>'
     });
 };
+```
+
+### `parsePartialName` `{Function(Object):String}`
+
+By default, standalone partials will be named according to the shortest unique file path without the extension. So a partial with a path of `component/link.hbs` will be named `component/link`. You may optionally provide your own name parser. This is helpful in cases where you may wish to exclude the directory names.
+
+```js
+parsePartialName: function (file) {
+    // this.handlebars <- current handlebars instance
+    // file.path       <- full system path with extension
+    // file.shortPath  <- shortest unique path without extension
+    // file.exports    <- result of requiring the helper
+
+    // Ignore directory names
+    return path.basename(file.shortPath);
+}
+```
+
+### `bustCache` `{Boolean}` (default: `false`)
+
+Whether to force a reload of data, helpers, and partials by deleting them from the cache. Useful inside watch tasks.
+
+### `cwd` `{String}`
+
+Current working directory. Defaults to `process.cwd()`.
+
+### `dataEach` `{Function(Object,Vinyl):Object}`
+
+A pre-render hook to modify the context object being passed to the handlebars template on a per-file basis. May be used to load additional file-specific data.
+
+```js
+dataEach: function (context, file) {
+    context.foo = 'bar';
+    context.meta = require(file.path.replace('.html', '.json'));
+    return context;
+}
+```
+
+### `debug` `{Boolean}` (default: `false`)
+
+Whether to log the helper names, partial names, and root property names for each file as they are rendered.
+
+### `file` `{Boolean}` (default: `true`)
+
+Whether to include the file object in the data passed to the template, which includes the file's front matter.
+
+```handlebars
+---
+title: Hello World
+---
+<h1>{{file.frontMatter.title}}</h1>
 ```
 
 ## Contribute
