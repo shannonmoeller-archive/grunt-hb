@@ -1,12 +1,13 @@
-'use strict';
+/* eslint-env mocha */
 
 var expect = require('expect'),
 	fs = require('fs'),
 	map = require('map-stream'),
+	path = require('path'),
 	vinylFs = require('vinyl-fs'),
 
 	config = {
-		actual: __dirname + '/actual/**/*.html'
+		actual: path.join(__dirname, '/actual/**/*.html')
 	};
 
 describe('hb e2e', function () {
@@ -16,6 +17,7 @@ describe('hb e2e', function () {
 		count++;
 
 		var expected = file.path.replace('actual', 'expected');
+
 		expect(String(file.contents)).toBe(String(fs.readFileSync(expected)));
 		cb(null, file);
 	}

@@ -1,5 +1,3 @@
-'use strict';
-
 var frontMatter = require('gulp-front-matter'),
 	hb = require('gulp-hb'),
 	path = require('path'),
@@ -23,7 +21,7 @@ module.exports = function (grunt) {
 
 		function success() {
 			// Are we done yet?
-			if ((--count) === 0) {
+			if (--count === 0) {
 				done(true);
 			}
 		}
@@ -33,6 +31,8 @@ module.exports = function (grunt) {
 				dirname = path.dirname(dest),
 				basename = path.basename(dest);
 
+			console.log(file.src);
+
 			vinylFs                          // Oh yes I did
 				.src(file.src)               // Read file
 				.pipe(frontMatter(options))  // Parse frontmatter
@@ -40,7 +40,7 @@ module.exports = function (grunt) {
 				.pipe(rename(basename))      // Set new filename
 				.pipe(vinylFs.dest(dirname)) // Write file
 				.on('error', fail)           // Handle errors
-				.on('end', success);         // Mark completed
+				.on('finish', success);      // Mark completed
 		}
 
 		if (count) {

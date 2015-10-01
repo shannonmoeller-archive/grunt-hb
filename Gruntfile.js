@@ -1,5 +1,3 @@
-'use strict';
-
 var vinylFs = require('vinyl-fs'),
 	paths = {
 		grunt: './Gruntfile.js',
@@ -45,7 +43,7 @@ module.exports = function (grunt) {
 
 			helpers: {
 				options: {
-					helpers: '<%= dirs.fixtures %>/helpers/**/*.js',
+					helpers: '<%= dirs.fixtures %>/helpers/**/*.js'
 				},
 				src: '<%= dirs.fixtures %>/templates/helpers.html',
 				dest: '<%= dirs.actual %>/templates/helpers.html'
@@ -53,7 +51,7 @@ module.exports = function (grunt) {
 
 			partials: {
 				options: {
-					partials: '<%= dirs.fixtures %>/partials/**/*.hbs',
+					partials: '<%= dirs.fixtures %>/partials/**/*.hbs'
 				},
 				src: '<%= dirs.fixtures %>/templates/partials.html',
 				dest: '<%= dirs.actual %>/templates/partials.html'
@@ -63,7 +61,7 @@ module.exports = function (grunt) {
 				options: {
 					data: '<%= dirs.fixtures %>/data/*.{js,json}',
 					helpers: '<%= dirs.fixtures %>/helpers/**/*.js',
-					partials: '<%= dirs.fixtures %>/partials/**/*.hbs',
+					partials: '<%= dirs.fixtures %>/partials/**/*.hbs'
 				},
 				files: {
 					'<%= dirs.actual %>/templates/all.html': '<%= dirs.fixtures %>/templates/all.html',
@@ -138,14 +136,12 @@ module.exports = function (grunt) {
 	grunt.registerTask('default', ['lint', 'cover', 'hb', 'test', 'clean']);
 
 	grunt.registerTask('lint', function () {
-		var jscs = require('gulp-jscs'),
-			jshint = require('gulp-jshint');
+		var eslint = require('gulp-eslint');
 
 		vinylFs
 			.src([paths.grunt, paths.src, paths.test])
-			.pipe(jscs())
-			.pipe(jshint())
-			.pipe(jshint.reporter('jshint-stylish'))
+			.pipe(eslint())
+			.pipe(eslint.format())
 			.on('finish', this.async());
 	});
 
